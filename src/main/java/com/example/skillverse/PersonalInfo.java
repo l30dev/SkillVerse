@@ -32,3 +32,4 @@ public class PersonalInfo {
     public String getPhone() { return phone; }
     public String getBio() { return bio; }
 }
+
