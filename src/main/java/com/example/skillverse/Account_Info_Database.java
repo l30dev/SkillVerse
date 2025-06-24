@@ -46,7 +46,7 @@ public class Account_Info_Database {
         return -1;  
     }
 
-    // Fetch personal_info.id by user_id — this is the "profile ID"
+   
     public static int getPersonalInfoIdByUserId(int userId) {
         String sql = "SELECT id FROM personal_info WHERE user_id = ?";
 
@@ -67,7 +67,6 @@ public class Account_Info_Database {
         return -1;
     }
 
-    // Get personal info by user_id (for display)
     public static PersonalInfo getPersonalInfoByUserId(int userId) {
         String sql = "SELECT * FROM personal_info WHERE user_id = ?";
         try (Connection conn = getConnection();
@@ -148,7 +147,7 @@ public class Account_Info_Database {
                         rs.getString("availability"),
                         rs.getString("languages"),
                         rs.getString("work_style"),
-                        ""  // bio or extra info if any
+                        ""  
                 );
             }
 
