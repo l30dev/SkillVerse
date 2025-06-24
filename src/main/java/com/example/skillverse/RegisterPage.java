@@ -51,4 +51,5 @@ public class RegisterPage {
     public VBox getLayout() {
         return layout;
     }
+    
 }
