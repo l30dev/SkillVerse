@@ -31,4 +31,4 @@ public class RegisterSuccessPage {
     public VBox getLayout() {
         return layout;
     }
-}
+} 
