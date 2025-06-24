@@ -5,7 +5,6 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 public class LoginApp extends Application {
-
     @Override
     public void start(Stage stage) {
         LoginPage loginPage = new LoginPage(stage);
