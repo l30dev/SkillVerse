@@ -11,7 +11,7 @@ public class Account_Info_Database {
         return DriverManager.getConnection(url, user, password);
     }
 
-    // Insert personal info and return generated personal_info.id (profileId)
+  
     public static int insertPersonalInfoReturnId(String firstName, String lastName, Date birthday, String gender,
                                                  String email, String country, String city, String phone,
                                                  String bio, Timestamp createdAt, int user_id) {
@@ -36,14 +36,14 @@ public class Account_Info_Database {
 
             ResultSet rs = stmt.executeQuery();
             if (rs.next()) {
-                return rs.getInt("id"); // return profileId (personal_info.id)
+                return rs.getInt("id"); 
             }
 
         } catch (SQLException e) {
             e.printStackTrace();
         }
 
-        return -1;  // error case
+        return -1;  
     }
 
     // Fetch personal_info.id by user_id — this is the "profile ID"
@@ -97,8 +97,7 @@ public class Account_Info_Database {
         return null;
     }
 
-    // Insert work info linked to personal_info.id (profileId)
-    // Note: in work_info table, the FK column is named 'id' (refers to personal_info.id)
+    
     public static boolean insertWorkInfo(int personalInfoId, String education, String primary_role, String skills,
                                          int experience_years, String project_types, String availability,
                                          String languages_spoken, String work_style, Timestamp last_info_update) {
@@ -109,7 +108,7 @@ public class Account_Info_Database {
         try (Connection conn = getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
 
-            stmt.setInt(1, personalInfoId);  // FK column 'id' refers to personal_info.id
+            stmt.setInt(1, personalInfoId);  
             stmt.setString(2, education);
             stmt.setString(3, primary_role);
             stmt.setString(4, skills);
@@ -129,8 +128,7 @@ public class Account_Info_Database {
         }
     }
 
-    // Get work experience by personal_info.id (profileId)
-    // Note: in work_info table, the FK column is named 'id' (refers to personal_info.id)
+   
     public static WorkExperience getWorkInfoByPersonalInfoId(int personalInfoId) {
         String sql = "SELECT * FROM work_info WHERE id = ?";
 
