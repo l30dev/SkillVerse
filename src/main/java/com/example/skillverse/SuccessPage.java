@@ -18,7 +18,7 @@ public class SuccessPage {
 
         profileBtn.setOnAction(e -> {
             int userId = Database.getId(username);
-            System.out.println("User ID: " + userId); // DEBUG
+            System.out.println("User ID: " + userId); 
 
             PersonalInfo info = Account_Info_Database.getPersonalInfoByUserId(userId);
 
@@ -27,7 +27,7 @@ public class SuccessPage {
                 return;
             }
 
-            // Create profile info scene
+            
             Label infoLabel = new Label(
                     "Name: " + info.getFirstName() + " " + info.getLastName() + "\n" +
                             "Birthday: " + info.getBirthday() + "\n" +
@@ -50,7 +50,7 @@ public class SuccessPage {
             profileScene.getStylesheets().add(SuccessPage.class.getResource("loginStyle.css").toExternalForm());
             stage.setScene(profileScene);
 
-            // When user clicks "Show Work Info"
+           
             workInfoBtn.setOnAction(ev -> {
                 int personalInfoId = Account_Info_Database.getPersonalInfoIdByUserId(userId);
                 WorkExperience work = Account_Info_Database.getWorkInfoByPersonalInfoId(personalInfoId);
@@ -85,7 +85,7 @@ public class SuccessPage {
                 backToProfileBtn.setOnAction(b -> stage.setScene(profileScene));
             });
 
-            // Back to Welcome
+           
             backBtn.setOnAction(backEvent -> show(stage, username));
         });
 
