@@ -8,30 +8,32 @@ import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
-import java.sql.Timestamp;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class WorkInfoPage {
-    private VBox layout;
+public class WorkInfoEditPage {
+    private Stage stage;
     private int personalInfoId;
+    private WorkExperience work;
+    private Scene backScene;
 
-    public WorkInfoPage(Stage stage, int personalInfoId) {
+    public WorkInfoEditPage(Stage stage, int personalInfoId, WorkExperience work, Scene backScene) {
+        this.stage = stage;
         this.personalInfoId = personalInfoId;
+        this.work = work;
+        this.backScene = backScene;
 
-        Label title = new Label("Work & Skill Information");
+        buildLayout();
+    }
 
+    private void buildLayout() {
         ComboBox<String> education = new ComboBox<>();
         education.getItems().addAll(
                 "High School", "Associate Degree", "Bachelor's Degree", "Master's Degree", "PhD",
                 "Online Course Graduate", "Vocational Training", "Diploma Holder", "Certificate Program",
                 "Postdoc", "Self-taught", "Technical School", "Bootcamp Graduate", "Short-term Workshop", "Other"
         );
-        education.setPromptText("Select Education");
-
-        TextArea skills = new TextArea();
-        skills.setPromptText("List of Skills");
+        education.setValue(work.getEducation());
 
         ComboBox<String> role = new ComboBox<>();
         role.getItems().addAll(
@@ -39,10 +41,11 @@ public class WorkInfoPage {
                 "DevOps Engineer", "AI/ML Engineer", "Business Analyst", "IT Consultant", "System Administrator",
                 "Product Manager", "Mobile Developer", "Cloud Architect", "Technical Writer", "Other"
         );
-        role.setPromptText("Select Primary Role");
+        role.setValue(work.getPrimaryRole());
 
-        Label experienceYearsText = new Label("Years of Experience:");
-        Spinner<Integer> experienceYears = new Spinner<>(0, 50, 0);
+        TextArea skills = new TextArea(work.getSkills());
+
+        Spinner<Integer> experienceYears = new Spinner<>(0, 50, work.getExperienceYears());
         experienceYears.setEditable(true);
 
         ComboBox<String> projectTypes = new ComboBox<>();
@@ -51,7 +54,7 @@ public class WorkInfoPage {
                 "Cloud Solutions", "Blockchain Projects", "AR/VR Solutions", "Networking", "Game Development",
                 "IoT Projects", "Cybersecurity Solutions", "Machine Learning Models", "DevOps Infrastructure", "Other"
         );
-        projectTypes.setPromptText("Select Project Type");
+        projectTypes.setValue(work.getProjectTypes());
 
         ComboBox<String> availability = new ComboBox<>();
         availability.getItems().addAll(
@@ -59,7 +62,7 @@ public class WorkInfoPage {
                 "Remote", "On-site", "Hybrid", "Project-based", "Consultant",
                 "Temporary", "Volunteer", "Co-op", "Seasonal", "Other"
         );
-        availability.setPromptText("Select Availability");
+        availability.setValue(work.getAvailability());
 
         ListView<String> languagesList = new ListView<>();
         languagesList.setItems(FXCollections.observableArrayList(
@@ -70,66 +73,56 @@ public class WorkInfoPage {
         languagesList.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
         languagesList.setPrefHeight(180);
 
+        // Select existing languages
+        for (String lang : work.getLanguagesSpoken().split(",\\s*")) {
+            languagesList.getSelectionModel().select(lang);
+        }
+
         ComboBox<String> workStyle = new ComboBox<>();
         workStyle.getItems().addAll(
                 "Independent", "Team-oriented", "Detail-oriented", "Creative", "Analytical",
                 "Problem-solver", "Flexible", "Strategic", "Proactive", "Organized",
                 "Leader", "Communicator", "Fast learner", "Technical", "Innovative"
         );
-        workStyle.setPromptText("Select Work Style");
+        workStyle.setValue(work.getWorkStyle());
 
-        TextArea bio = new TextArea();
-        bio.setPromptText("Short Bio / Info");
+        TextArea bio = new TextArea(work.getBio());
 
-        Button submitBtn = new Button("Submit Work Experience");
+        Button saveBtn = new Button("✅ Save Changes");
+        Button cancelBtn = new Button("❌ Cancel");
 
-        submitBtn.setOnAction(e -> {
-            if (education.getValue() == null || role.getValue() == null || skills.getText().trim().isEmpty()) {
-                showAlert("Please fill out Education, Role, and Skills.");
-                return;
-            }
-
-            List<String> selectedLangs = languagesList.getSelectionModel().getSelectedItems();
-            String languagesCsv = selectedLangs.stream().collect(Collectors.joining(", "));
-
-            boolean inserted = Account_Info_Database.insertWorkInfo(
-                    personalInfoId,
-                    education.getValue(),
-                    role.getValue(),
-                    skills.getText().trim(),
-                    experienceYears.getValue(),
-                    projectTypes.getValue(),
-                    availability.getValue(),
-                    languagesCsv,
-                    workStyle.getValue(),
-                    Timestamp.valueOf(LocalDateTime.now())
-            );
-
-            if (inserted) {
-                RegisterSuccessPage successPage = new RegisterSuccessPage(stage);
-                Scene successScene = new Scene(successPage.getLayout(), 300, 200);
-                successScene.getStylesheets().add(getClass().getResource("workStyle.css").toExternalForm());
-                stage.setScene(successScene);
-            } else {
-                showAlert("Failed to save work info.");
-            }
-        });
-
-        layout = new VBox(10, title, education, skills, role, experienceYearsText, experienceYears,
-                projectTypes, availability, new Label("Select Languages (Ctrl+Click):"), languagesList,
-                workStyle, bio, submitBtn);
+        VBox layout = new VBox(10, education, role, skills, experienceYears, projectTypes,
+                availability, new Label("Select Languages (Ctrl+Click):"), languagesList,
+                workStyle, bio, saveBtn, cancelBtn);
         layout.setAlignment(Pos.CENTER);
         layout.setPadding(new Insets(20));
         layout.getStyleClass().add("login-box");
-    }
 
-    public VBox getLayout() {
-        return layout;
-    }
+        Scene scene = new Scene(layout, 500, 650);
+        scene.getStylesheets().add(WorkInfoEditPage.class.getResource("workStyle.css").toExternalForm());
+        stage.setScene(scene);
 
-    private void showAlert(String message) {
-        Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setContentText(message);
-        alert.show();
+        saveBtn.setOnAction(e -> {
+            work.setEducation(education.getValue());
+            work.setPrimaryRole(role.getValue());
+            work.setSkills(skills.getText());
+            work.setExperienceYears(experienceYears.getValue());
+            work.setProjectTypes(projectTypes.getValue());
+            work.setAvailability(availability.getValue());
+
+            List<String> selectedLangs = languagesList.getSelectionModel().getSelectedItems();
+            String languagesCsv = selectedLangs.stream().collect(Collectors.joining(", "));
+            work.setLanguagesSpoken(languagesCsv);
+
+            work.setWorkStyle(workStyle.getValue());
+            work.setBio(bio.getText());
+
+            Account_Info_Database.updateWorkInfo(personalInfoId, work);
+            SuccessPage.showAlert("Work info updated!");
+            stage.setScene(backScene);
+        });
+
+        cancelBtn.setOnAction(e -> stage.setScene(backScene));
     }
 }
+

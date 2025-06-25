@@ -160,4 +160,60 @@ public class Account_Info_Database {
 
         return null;
     }
+    public static void updateWorkInfo(int personalInfoId, WorkExperience work) {
+        String sql = "UPDATE work_info SET education = ?, primary_role = ?, skills = ?, experience_years = ?, " +
+                "project_types = ?, availability = ?, languages = ?, work_style = ?, last_info_update = CURRENT_TIMESTAMP " +
+                "WHERE id = ?";
+        try (Connection conn = getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setString(1, work.getEducation());
+            pstmt.setString(2, work.getPrimaryRole());
+            pstmt.setString(3, work.getSkills());
+            pstmt.setInt(4, work.getExperienceYears());
+            pstmt.setString(5, work.getProjectTypes());
+            pstmt.setString(6, work.getAvailability());
+            pstmt.setString(7, work.getLanguagesSpoken());
+            pstmt.setString(8, work.getWorkStyle());
+            pstmt.setInt(9, personalInfoId);
+
+            int updatedRows = pstmt.executeUpdate();
+            System.out.println(updatedRows > 0 ? "✅ Work info updated." : "❌ No work info updated.");
+        } catch (SQLException e) {
+            System.out.println("❌ Failed to update work info: " + e.getMessage());
+        }
+    }
+
+    public static void updatePersonalInfo(int userId, PersonalInfo info) {
+        String sql = "UPDATE personal_info SET " +
+                "first_name = ?, last_name = ?, birthday = ?, gender = ?, " +
+                "email = ?, location_country = ?, location_city = ?, phone_number = ?, bio = ?, last_info_update = CURRENT_TIMESTAMP " +
+                "WHERE user_id = ?";
+
+        try (Connection conn = getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setString(1, info.getFirstName());
+            pstmt.setString(2, info.getLastName());
+            pstmt.setDate(3, info.getBirthday()); // java.sql.Date
+            pstmt.setString(4, info.getGender());
+            pstmt.setString(5, info.getEmail());
+            pstmt.setString(6, info.getCountry());  // maps to location_country
+            pstmt.setString(7, info.getCity());     // maps to location_city
+            pstmt.setString(8, info.getPhone());    // maps to phone_number
+            pstmt.setString(9, info.getBio());
+            pstmt.setInt(10, userId);
+
+            int rows = pstmt.executeUpdate();
+            if (rows > 0) {
+                System.out.println("✅ Personal info updated successfully.");
+            } else {
+                System.out.println("⚠️ No personal info record updated - check user_id.");
+            }
+        } catch (SQLException e) {
+            System.out.println("❌ Failed to update personal info: " + e.getMessage());
+        }
+    }
+
+
 }

@@ -1,0 +1,42 @@
+.login-box {
+    -fx-background-color: #fff5e6;
+    -fx-border-color: #cc6600;
+    -fx-border-radius: 10;
+    -fx-background-radius: 10;
+    -fx-padding: 25;
+    -fx-effect: dropshadow(gaussian, rgba(204, 102, 0, 0.3), 10, 0.5, 0, 5);
+}
+
+.label {
+    -fx-font-size: 15px;
+    -fx-text-fill: #4b3e2f;
+}
+
+.combo-box, .text-area, .text-field {
+    -fx-background-color: #ffffff;
+    -fx-border-color: #deb887;
+    -fx-border-radius: 5;
+    -fx-padding: 6;
+}
+
+.button {
+    -fx-background-color: #cc6600;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-background-radius: 5;
+    -fx-padding: 8 16 8 16;
+}
+
+.button:hover {
+    -fx-background-color: #994c00;
+    -fx-cursor: hand;
+}
+.list-view {
+    -fx-background-color: white;
+    -fx-border-color: #cc6600;
+    -fx-border-width: 2px;               /* Thicker border */
+    -fx-border-radius: 6px;
+    -fx-padding: 8px;                    /* Adds space inside */
+    -fx-background-insets: 0;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 6, 0.3, 0, 2);
+}

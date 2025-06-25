@@ -24,6 +24,15 @@ public class WorkExperience {
         this.workStyle = workStyle;
         this.bio = bio;
     }
+    public void setEducation(String education) { this.education = education; }
+    public void setPrimaryRole(String primaryRole) { this.primaryRole = primaryRole; }
+    public void setSkills(String skills) { this.skills = skills; }
+    public void setExperienceYears(int experienceYears) { this.experienceYears = experienceYears; }
+    public void setProjectTypes(String projectTypes) { this.projectTypes = projectTypes; }
+    public void setAvailability(String availability) { this.availability = availability; }
+    public void setLanguagesSpoken(String languagesSpoken) { this.languagesSpoken = languagesSpoken; }
+    public void setWorkStyle(String workStyle) { this.workStyle = workStyle; }
+    public void setBio(String bio) { this.bio = bio; }
 
     public String getEducation() { return education; }
     public String getPrimaryRole() { return primaryRole; }

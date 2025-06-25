@@ -87,7 +87,7 @@ public class PersonalInfoPage {
             if (personalId != -1) {
                 WorkInfoPage workPage = new WorkInfoPage(stage, personalId);
                 Scene workScene = new Scene(workPage.getLayout(), 400, 600);
-                workScene.getStylesheets().add(getClass().getResource("loginStyle.css").toExternalForm());
+                workScene.getStylesheets().add(getClass().getResource("profileStyle.css").toExternalForm());
                 stage.setScene(workScene);
             } else {
                 showAlert("Failed to save personal info.");

@@ -20,6 +20,15 @@ public class PersonalInfo {
         this.phone = phone;
         this.bio = bio;
     }
+    public void setFirstName(String firstName) { this.firstName = firstName; }
+    public void setLastName(String lastName) { this.lastName = lastName; }
+    public void setBirthday(Date birthday) { this.birthday = birthday; }
+    public void setGender(String gender) { this.gender = gender; }
+    public void setEmail(String email) { this.email = email; }
+    public void setPhone(String phone) { this.phone = phone; }
+    public void setCountry(String country) { this.country = country; }
+    public void setCity(String city) { this.city = city; }
+    public void setBio(String bio) { this.bio = bio; }
 
     public int getId() { return id; }
     public String getFirstName() { return firstName; }
