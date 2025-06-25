@@ -9,6 +9,7 @@ import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
 import java.sql.Date;
+import java.util.List;
 
 public class SuccessPage {
 
@@ -80,8 +81,20 @@ public class SuccessPage {
             backBtn.setOnAction(backEvent -> show(stage, username));
         });
 
+
         searchBtn.setOnAction(e -> {
-            showAlert("Search feature coming soon!");
+            int currentUserId = Database.getId(username);
+            List<ColleagueMatcher.MatchResult> matches = ColleagueMatcher.findTopMatches(currentUserId);
+
+            if (matches.isEmpty()) {
+                showAlert("No compatible partners found.");
+            } else {
+                StringBuilder sb = new StringBuilder("Top Compatible Partners:\n\n");
+                for (ColleagueMatcher.MatchResult match : matches) {
+                    sb.append(String.format("%s (Score: %d)\n", match.fullName, match.score));
+                }
+                showInfoDialog("Search Results", sb.toString());
+            }
         });
 
         logoutBtn.setOnAction(e -> {
@@ -169,6 +182,14 @@ public class SuccessPage {
     static void showAlert(String message) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION, message, ButtonType.OK);
         alert.setHeaderText(null);
+        alert.showAndWait();
+    }
+
+    static void showInfoDialog(String title, String message) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(message);
         alert.showAndWait();
     }
 }
