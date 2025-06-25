@@ -12,7 +12,7 @@ public class Database {
         return DriverManager.getConnection(url, user, password);
     }
 
-    // ✅ Insert new user with hashed password
+
     public static boolean insertUser(String username, String password) {
         String hashed = hash(password);
         String sql = "INSERT INTO users (username, password_hash) VALUES (?, ?)";
@@ -28,7 +28,7 @@ public class Database {
         }
     }
 
-    // ✅ Validate login
+   
     public static boolean validateUser(String username, String password) {
         String hashed = hash(password);
         String sql = "SELECT * FROM users WHERE username = ? AND password_hash = ?";
@@ -44,7 +44,7 @@ public class Database {
         }
     }
 
-    // ✅ Get ID by username
+
     public static int getId(String username) {
         String sql = "SELECT id FROM users WHERE username = ?";
 
@@ -59,10 +59,10 @@ public class Database {
             e.printStackTrace();
         }
 
-        return -1; // User not found
+        return -1;
     }
 
-    // ✅ Hash password with SHA-256
+   
     private static String hash(String password) {
         try {
             MessageDigest md = MessageDigest.getInstance("SHA-256");
