@@ -13,9 +13,9 @@ import java.time.LocalDateTime;
 
 public class PersonalInfoPage {
     private VBox layout;
-    private String username;  // store username here
+    private String username;
 
-    // Updated constructor to accept username
+
     public PersonalInfoPage(Stage stage, String username) {
         this.username = username;
 
@@ -62,14 +62,14 @@ public class PersonalInfoPage {
                 return;
             }
 
-            // Get user ID from username
+
             int userId = Database.getId(username);
             if (userId == -1) {
                 showAlert("User not found. Please login again.");
                 return;
             }
 
-            // Pass userId to insertPersonalInfoReturnId
+
             int personalId = Account_Info_Database.insertPersonalInfoReturnId(
                     firstName.getText(),
                     lastName.getText(),
@@ -81,7 +81,7 @@ public class PersonalInfoPage {
                     phone.getText(),
                     bio.getText(),
                     Timestamp.valueOf(LocalDateTime.now()),
-                    userId  // <-- pass userId here
+                    userId
             );
 
             if (personalId != -1) {
