@@ -9,13 +9,15 @@ public class ColleagueMatcher {
     private static final String DB_PASSWORD = "1216";
 
     public static class MatchResult {
-        public int personalInfoId;  // personal_info.id
+        public int personalInfoId;
         public String fullName;
+        public String email;
         public int score;
 
-        public MatchResult(int personalInfoId, String fullName, int score) {
+        public MatchResult(int personalInfoId, String fullName, String email, int score) {
             this.personalInfoId = personalInfoId;
             this.fullName = fullName;
+            this.email = email;
             this.score = score;
         }
     }
@@ -24,10 +26,7 @@ public class ColleagueMatcher {
         List<MatchResult> matches = new ArrayList<>();
 
         try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
-            // 1. Get personal_info.id by user_id (users.id)
-            PreparedStatement piStmt = conn.prepareStatement(
-                    "SELECT id FROM personal_info WHERE user_id = ?"
-            );
+            PreparedStatement piStmt = conn.prepareStatement("SELECT id FROM personal_info WHERE user_id = ?");
             piStmt.setInt(1, currentUserId);
             ResultSet piRs = piStmt.executeQuery();
 
@@ -37,9 +36,8 @@ public class ColleagueMatcher {
             }
             int currentPersonalInfoId = piRs.getInt("id");
 
-            // 2. Fetch current user's personal_info + work_info by personal_info.id
             PreparedStatement currStmt = conn.prepareStatement(
-                    "SELECT wi.*, pi.first_name, pi.last_name, pi.location_country, pi.languages, pi.user_id " +
+                    "SELECT wi.*, pi.first_name, pi.last_name, pi.location_country, pi.user_id " +
                             "FROM work_info wi " +
                             "JOIN personal_info pi ON wi.id = pi.id " +
                             "WHERE pi.id = ?"
@@ -52,7 +50,6 @@ public class ColleagueMatcher {
                 return matches;
             }
 
-            // Extract current user fields
             String role = currentRs.getString("primary_role");
             String[] skills = split(currentRs.getString("skills"));
             int experience = currentRs.getInt("experience_years");
@@ -61,9 +58,8 @@ public class ColleagueMatcher {
             String[] languages = split(currentRs.getString("languages"));
             String workStyle = currentRs.getString("work_style");
 
-            // 3. Fetch all other users (exclude current user by personal_info.user_id)
             PreparedStatement otherStmt = conn.prepareStatement(
-                    "SELECT wi.*, pi.first_name, pi.last_name, pi.id, pi.location_country, pi.languages, pi.user_id " +
+                    "SELECT wi.*, pi.first_name, pi.last_name, pi.email, pi.id, pi.location_country, pi.user_id " +
                             "FROM work_info wi " +
                             "JOIN personal_info pi ON wi.id = pi.id " +
                             "WHERE pi.user_id != ?"
@@ -73,7 +69,6 @@ public class ColleagueMatcher {
 
             while (rs.next()) {
                 int score = 0;
-
                 if (safeEquals(role, rs.getString("primary_role"))) score += 3;
                 score += overlapCount(skills, split(rs.getString("skills")), 4);
 
@@ -82,7 +77,6 @@ public class ColleagueMatcher {
 
                 if (safeEquals(projects, rs.getString("project_types"))) score += 2;
                 if (safeEquals(country, rs.getString("location_country"))) score += 2;
-
                 score += overlapCount(languages, split(rs.getString("languages")), 2);
 
                 if (safeEquals(workStyle, rs.getString("work_style"))) score += 1;
@@ -90,12 +84,12 @@ public class ColleagueMatcher {
                 matches.add(new MatchResult(
                         rs.getInt("id"),
                         rs.getString("first_name") + " " + rs.getString("last_name"),
+                        rs.getString("email"),
                         score
                 ));
             }
 
             matches.sort((a, b) -> Integer.compare(b.score, a.score));
-
         } catch (SQLException e) {
             e.printStackTrace();
         }

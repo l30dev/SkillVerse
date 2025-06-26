@@ -72,7 +72,7 @@ public class SuccessPage {
                 stage.setScene(workScene);
 
                 editWorkBtn.setOnAction(ev2 -> {
-                    WorkInfoEditPage editPage = new WorkInfoEditPage(stage, personalInfoId, work, workScene);
+                    new WorkInfoEditPage(stage, personalInfoId, work, workScene);
                 });
 
                 backToProfileBtn.setOnAction(ev2 -> stage.setScene(profileScene));
@@ -80,7 +80,6 @@ public class SuccessPage {
 
             backBtn.setOnAction(backEvent -> show(stage, username));
         });
-
 
         searchBtn.setOnAction(e -> {
             int currentUserId = Database.getId(username);
@@ -91,7 +90,8 @@ public class SuccessPage {
             } else {
                 StringBuilder sb = new StringBuilder("Top Compatible Partners:\n\n");
                 for (ColleagueMatcher.MatchResult match : matches) {
-                    sb.append(String.format("%s (Score: %d)\n", match.fullName, match.score));
+                    sb.append(String.format("👤 %s (Score: %d)\n📧 Email: %s\n\n",
+                            match.fullName, match.score, match.email));
                 }
                 showInfoDialog("Search Results", sb.toString());
             }
