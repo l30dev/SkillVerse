@@ -15,7 +15,7 @@ SkillVerse is a Java desktop application that helps users create skill-based pro
 - PostgreSQL database integration  
 - JavaFX UI with custom CSS styling  
 - CV-style profile rendering (editable anytime)  
-- **Search Compatible Partners:** Quickly find and display the top 3 best matching profiles based on your skills and preferences  
+- **Search Compatible Partners:** Quickly find and display the top 3 best matching profiles based on your skills and preferences   
 
 ## 🧪 Test Credentials
 
